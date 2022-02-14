@@ -34,11 +34,15 @@ impl DeployContract {
             Promise::new(env::predecessor_account_id()).transfer(refund);
         }
 
-        self.internal_add_account_to_record(&account_id);
+        self.internal_add_account_to_record(env::predecessor_account_id(), &account_id);
         Promise::new(account_id)
             .create_account()
             .transfer(INITIAL_DEPOSIT)
             .add_full_access_key(env::signer_account_pk())
             .deploy_contract(include_bytes!("../wasmFile/main.wasm").to_vec())
+    }
+
+    pub fn get_record(&self) -> Option<UnorderedSet<AccountId>> {
+        self.records.get(&"Drawstring".to_string())
     }
 }
